@@ -13,6 +13,7 @@ class EventBloc extends Bloc<EventEvent, EventState> {
   }) : super(EventState()) {
     on<EventEventAdd>(_onAddNewEvent);
     on<EventGetEvents>(_onGetEvents);
+    on<EventDeleteEvent>(_onDeleteEvent);
   }
 
   final EventRepository eventRepository;
@@ -41,6 +42,16 @@ class EventBloc extends Bloc<EventEvent, EventState> {
         },
       );
     } catch (error) {
+      emit(state.copyWith(status: EventStatus.error));
+    }
+  }
+
+  Future<void> _onDeleteEvent(
+      EventDeleteEvent event, Emitter<EventState> emit) async {
+    try {
+      eventRepository.deleteEvent(event.id);
+      emit(state.copyWith(status: EventStatus.success));
+    } catch (_) {
       emit(state.copyWith(status: EventStatus.error));
     }
   }

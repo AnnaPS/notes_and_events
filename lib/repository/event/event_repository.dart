@@ -14,4 +14,7 @@ class EventRepository {
   Future<void> addEvent(EventEntity event) async {
     await _firebaseDatabase.addEvent(event);
   }
+
+  Future<void> deleteEvent(String id) async =>
+      await _firebaseDatabase.deleteById(id);
 }

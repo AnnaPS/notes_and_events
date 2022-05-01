@@ -45,7 +45,12 @@ class _EventListWidget extends StatelessWidget {
         return ListTile(
           title: Text(events[index].title),
           subtitle: Text(events[index].description),
-          trailing: const Icon(Icons.delete, color: Colors.red),
+          trailing: IconButton(
+            icon: const Icon(Icons.delete, color: Colors.red),
+            onPressed: () => context.read<EventBloc>().add(
+                  EventDeleteEvent(id: events[index].id),
+                ),
+          ),
         );
       },
       itemCount: events.length,
@@ -64,7 +69,6 @@ class _FloatingActionButtonWidget extends StatefulWidget {
 class _FloatingActionButtonWidgetState
     extends State<_FloatingActionButtonWidget> {
   final _titleController = TextEditingController();
-
   final _descriptionController = TextEditingController();
 
   @override
@@ -80,29 +84,36 @@ class _FloatingActionButtonWidgetState
             constraints: BoxConstraints(
               maxHeight: MediaQuery.of(context).size.height * 0.6,
             ),
-            builder: (_) => Column(
-              children: [
-                const _HeaderModal(),
-                _TitleTextField(controller: _titleController),
-                _DescriptionTextField(controller: _descriptionController),
-                const Spacer(),
-                _AddEventButton(
-                  callback: () {
-                    final event = EventEntity(
-                      id: const Uuid().v4(),
-                      title: _titleController.text,
-                      description: _descriptionController.text,
-                      starts: DateTime.now(),
-                      ends: DateTime.now().add(
-                        const Duration(days: 1),
-                      ),
-                      ownerUserId: 'ana',
-                    );
-                    context.read<EventBloc>().add(EventEventAdd(event: event));
-                    Navigator.pop(context);
-                  },
-                )
-              ],
+            builder: (_) => Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const _HeaderModal(),
+                  _TitleTextField(controller: _titleController),
+                  const SizedBox(height: 16.0),
+                  _DescriptionTextField(controller: _descriptionController),
+                  const Spacer(),
+                  _AddEventButton(
+                    callback: () {
+                      final event = EventEntity(
+                        id: const Uuid().v4(),
+                        title: _titleController.text,
+                        description: _descriptionController.text,
+                        starts: DateTime.now(),
+                        ends: DateTime.now().add(
+                          const Duration(days: 1),
+                        ),
+                        ownerUserId: 'ana',
+                      );
+                      context
+                          .read<EventBloc>()
+                          .add(EventEventAdd(event: event));
+                      Navigator.pop(context);
+                    },
+                  )
+                ],
+              ),
             ),
           );
         },
@@ -153,7 +164,8 @@ class _TitleTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding:
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: TextFormField(
         controller: controller,
         decoration: const InputDecoration(
@@ -177,7 +189,8 @@ class _DescriptionTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding:
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: TextFormField(
         controller: controller,
         keyboardType: TextInputType.multiline,

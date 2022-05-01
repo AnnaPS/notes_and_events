@@ -16,3 +16,10 @@ class EventEventAdd extends EventEvent {
 }
 
 class EventGetEvents extends EventEvent {}
+
+class EventDeleteEvent extends EventEvent {
+  EventDeleteEvent({
+    required this.id,
+  });
+  final String id;
+}

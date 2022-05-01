@@ -9,11 +9,26 @@ class FirebaseDatabase {
           .map((doc) => EventEntity.fromJson(doc.data()))
           .toList());
 
-  Future<void> addEvent(EventEntity event) {
-    return FirebaseFirestore.instance
+  Future<void> addEvent(EventEntity event) async {
+    await FirebaseFirestore.instance
         .collection('events')
         .add(event.toJson())
         .then((value) => print('Event Added'))
         .catchError((error) => print('Failed to add event: $error'));
+  }
+
+  Future<void> deleteById(String id) async {
+    await FirebaseFirestore.instance
+        .collection('events')
+        .where('id', isEqualTo: id)
+        .get()
+        .then((value) {
+      for (var element in value.docs) {
+        FirebaseFirestore.instance
+            .collection('events')
+            .doc(element.id)
+            .delete();
+      }
+    });
   }
 }
