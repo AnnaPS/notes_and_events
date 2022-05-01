@@ -36,14 +36,11 @@ class EventBloc extends Bloc<EventEvent, EventState> {
         eventRepository.getEvents(),
         onData: (events) => state.copyWith(
             status: EventStatus.success, events: events as List<EventEntity>),
-        onError: (e, st) {
-          print(st);
-          print(e);
+        onError: (_, __) {
           return state.copyWith(status: EventStatus.error);
         },
       );
     } catch (error) {
-      print(error);
       emit(state.copyWith(status: EventStatus.error));
     }
   }

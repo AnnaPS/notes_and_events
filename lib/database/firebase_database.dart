@@ -13,7 +13,7 @@ class FirebaseDatabase {
     return FirebaseFirestore.instance
         .collection('events')
         .add(event.toJson())
-        .then((value) => print("Event Added"))
-        .catchError((error) => print("Failed to add event: $error"));
+        .then((value) => print('Event Added'))
+        .catchError((error) => print('Failed to add event: $error'));
   }
 }

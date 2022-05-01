@@ -19,9 +19,9 @@ class EventEntity extends Equatable {
   final String id;
   final String title;
   final String description;
-  @JsonKey(fromJson: _dateTimeFromEpochUs, toJson: _dateTimeToEpochUs)
+  @JsonKey(fromJson: _timeStampToDate, toJson: _dateToTimeStamp)
   final DateTime starts;
-  @JsonKey(fromJson: _dateTimeFromEpochUs, toJson: _dateTimeToEpochUs)
+  @JsonKey(fromJson: _timeStampToDate, toJson: _dateToTimeStamp)
   final DateTime ends;
   final bool isAllDay;
   final String ownerUserId;
@@ -51,9 +51,8 @@ class EventEntity extends Equatable {
 
   Map<String, dynamic> toJson() => _$EventEntityToJson(this);
 
-  static DateTime _dateTimeFromEpochUs(Timestamp timestamp) =>
-      timestamp.toDate();
+  static DateTime _timeStampToDate(Timestamp timestamp) => timestamp.toDate();
 
-  static Timestamp _dateTimeToEpochUs(DateTime dateTime) =>
+  static Timestamp _dateToTimeStamp(DateTime dateTime) =>
       Timestamp.fromDate(dateTime);
 }
